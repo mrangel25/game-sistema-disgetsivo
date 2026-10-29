@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monte o Corpo Humano</title>
+<style>
+:root{--bg:#e3f2ff;--bg2:#fde4f1;--card:#fff;--ink:#23224a;--pri:#7c4dff;--on:#fff;--tray:#d9e2f5;--skin:#ffcba4;--line:#8a8fb0;--ok:#2e9e5b;--bad:#e5533d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17162e;--bg2:#2a1a33;--card:#26244a;--ink:#f1efff;--pri:#a98bff;--on:#1b1340;--tray:#2f2d57;--skin:#c9956b;--line:#a5a9d0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17162e;--bg2:#2a1a33;--card:#26244a;--ink:#f1efff;--pri:#a98bff;--on:#1b1340;--tray:#2f2d57;--skin:#c9956b;--line:#a5a9d0;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;background:linear-gradient(var(--bg),var(--bg2));color:var(--ink);background-color:var(--bg);overflow-x:hidden}
+.view{height:100%;display:flex;flex-direction:column;padding:10px 14px;max-width:760px;margin:0 auto}
+.view[hidden]{display:none}
+h1{font-size:clamp(26px,6vw,38px);margin:6px 0;text-align:center;color:var(--pri);font-weight:900}
+.btn{font:inherit;font-weight:800;font-size:19px;border:0;border-radius:99px;padding:12px 22px;background:var(--pri);color:var(--on);cursor:pointer;box-shadow:0 4px 0 #0003}
+.btn:active{transform:translateY(2px)}
+.btn.alt{background:#ff9800;color:#1b1340}.btn.g{background:var(--ok);color:#fff}
+.btn.sm{font-size:15px;padding:8px 14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
+.mascot{display:flex;gap:8px;align-items:center}
+.mascot .o{font-size:48px;animation:bob 2s ease-in-out infinite}
+.bubble{flex:1;background:var(--card);border:3px solid var(--pri);border-radius:20px;padding:8px 12px;font-weight:700;font-size:15px;line-height:1.3;min-height:58px;display:flex;align-items:center}
+@keyframes bob{50%{transform:translateY(-5px) rotate(-4deg)}}
+.card{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 4px 14px #0002}
+.pill{font:inherit;font-weight:700;border:2px solid var(--pri);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 14px;cursor:pointer}
+.pill.on{background:var(--pri);color:var(--on)}
+.prog{display:flex;align-items:center;gap:10px;margin:6px 0;font-weight:800}
+.bar{flex:1;height:16px;background:var(--tray);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb300,#ff7043);transition:width .5s}
+.stage{flex:1;min-height:0;display:flex;justify-content:center;align-items:center;position:relative}
+#body,#xbody{height:100%;max-height:100%;aspect-ratio:.62;touch-action:none}
+.tray{display:flex;gap:16px;overflow-x:auto;padding:10px;background:var(--tray);border-radius:20px;min-height:116px;align-items:flex-end}
+.it{display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:800;cursor:grab;touch-action:none;user-select:none;flex:none}
+.it.gone{opacity:.25}
+.drag{position:fixed;z-index:9;pointer-events:none;transform:translate(-50%,-50%)}
+.pop{transform-box:fill-box;transform-origin:center;animation:pop .7s cubic-bezier(.3,1.8,.5,1)}
+@keyframes pop{from{transform:scale(0)}}
+.burst{position:fixed;font-size:70px;pointer-events:none;z-index:10;animation:bst .9s forwards;transform:translate(-50%,-50%)}
+@keyframes bst{to{transform:translate(-50%,-90%) scale(2);opacity:0}}
+.shake{animation:shk .3s}
+@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.cert{background:#fff8e1;color:#3b2f00;border:6px solid #ffb300;border-radius:26px;text-align:center;padding:20px;margin:10px 0}
+.cert h2{margin:4px 0;font-size:30px}.cert b{font-size:30px}
+.stars{font-size:48px;letter-spacing:4px}
+.grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+.stk{font-size:34px;background:var(--card);border-radius:14px;width:54px;height:54px;display:grid;place-items:center}
+.q button{display:block;width:100%;margin:8px 0;font:inherit;font-weight:800;font-size:20px;padding:16px;border-radius:18px;border:0;background:var(--pri);color:var(--on);cursor:pointer}
+.scroll{overflow:auto}
+</style>
+</head>
+<body>
+
+<section class="view" id="home">
+  <h1>Monte o Corpo Humano</h1>
+  <div class="mascot"><span class="o">🦉</span><div class="bubble" id="hmsg"></div></div>
+  <div class="scroll" style="flex:1">
+    <div class="card" style="margin:12px 0;text-align:center">
+      <div style="font-weight:800;margin-bottom:6px">Qual é a sua idade?</div>
+      <div class="row" id="lv"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="pill" id="tn"></button><button class="pill" id="td">Tema</button>
+      </div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:54px">🍽️</div><b style="font-size:20px">Sistema Digestório</b>
+      <div style="margin:10px"><button class="btn" id="play">▶ Jogar</button></div>
+      <div id="stat" style="font-weight:800"></div>
+      <div class="grid" id="album"></div>
+    </div>
+    <div class="row" style="margin:12px 0;opacity:.6;font-weight:700">🦴 Esqueleto · ❤️ Coração · 🫁 Pulmões — em breve 🔒</div>
+  </div>
+</section>
+
+<section class="view" id="game" hidden>
+  <div class="row" style="justify-content:space-between">
+    <button class="btn sm" data-go="home">← Voltar</button>
+    <button class="pill" id="xr">👁 Raio X</button>
+  </div>
+  <div class="mascot"><span class="o">🦉</span><div class="bubble" id="msg"></div></div>
+  <div class="prog"><div class="bar"><i id="pb"></i></div><span id="pc"></span></div>
+  <div class="stage"><svg id="body" viewBox="0 0 310 500"></svg></div>
+  <div class="tray" id="tray"></div>
+</section>
+
+<section class="view scroll" id="done" hidden>
+  <div class="cert">
+    <div style="font-size:56px">🏅</div><h2>CERTIFICADO</h2>
+    <div>Parabéns,</div><b id="cn"></b>
+    <div>você montou o Sistema Digestório!</div>
+    <div class="stars" id="cs"></div><div id="csk" style="font-size:22px"></div>
+  </div>
+  <div class="row">
+    <button class="btn" id="goex">🔍 Explorar</button>
+    <button class="btn alt" id="goq">❓ Quiz</button>
+    <button class="btn g" data-go="home">🏠 Início</button>
+  </div>
+</section>
+
+<section class="view" id="explore" hidden>
+  <div class="row" style="justify-content:space-between"><button class="btn sm" data-go="done">← Voltar</button><b>Toque em um órgão!</b></div>
+  <div class="stage"><svg id="xbody" viewBox="0 0 310 500"></svg></div>
+  <div class="row" id="chips" style="margin:6px 0"></div>
+  <div class="card row" style="justify-content:space-between;flex-wrap:nowrap">
+    <div id="info" style="font-size:17px;font-weight:700">Toque em um órgão para aprender! 👆</div>
+    <button class="btn" id="spk" title="Ouvir" hidden>🔊</button>
+  </div>
+</section>
+
+<section class="view" id="quiz" hidden>
+  <div class="row" style="justify-content:flex-start"><button class="btn sm" data-go="done">← Voltar</button></div>
+  <div class="mascot" style="margin:10px 0"><span class="o">🦉</span><div class="bubble" id="qt"></div></div>
+  <div class="q" id="qo"></div>
+</section>
+
+<script>
+const W=310,H=500;
+const O=[
+['boca','Boca','#e53935',.5,.125,.17,.045,'Na boca, os dentes e a saliva começam a amassar a comida!','Mastiga a comida e mistura com saliva.','A boca fica no rostinho, onde a comida entra!'],
+['esofago','Esôfago','#f48fb1',.5,.255,.07,.13,'O esôfago é um tubinho que empurra a comida até a barriga.','Leva a comida da boca até o estômago.','Ele é um tubinho que desce pelo pescoço!'],
+['figado','Fígado','#a1665e',.39,.385,.22,.085,'O fígado é o maior órgão de dentro do corpo!','Ajuda a limpar o sangue e a digerir as gorduras.','Ele fica no alto da barriga, de um lado só.'],
+['estomago','Estômago','#ff8a65',.6,.395,.2,.095,'O estômago ajuda a transformar alimentos em energia.','Mistura a comida e a transforma numa papinha.','Ele fica no alto da barriga, do outro lado do fígado.'],
+['pancreas','Pâncreas','#ffd54f',.5,.475,.24,.04,'O pâncreas faz um suco especial que ajuda a digerir a comida.','Produz sucos que quebram a comida em pedacinhos.','Ele é compridinho e fica no meio da barriga, embaixo do estômago.'],
+['grosso','Intestino grosso','#ba68c8',.5,.575,.42,.15,'O intestino grosso abraça o delgado como uma moldura.','Absorve a água e forma o cocô.','Ele faz uma moldura na parte de baixo da barriga.'],
+['delgado','Intestino delgado','#f06292',.5,.575,.26,.085,'O intestino delgado tem mais de 6 metros de comprimento!','Pega os nutrientes da comida e leva para o sangue.','Ele é um tubo enroladinho, dentro da moldura da barriga.']
+].map(a=>({id:a[0],name:a[1],c:a[2],x:a[3]*W-a[5]*W/2,y:a[4]*H-a[6]*H/2,w:a[5]*W,h:a[6]*H,fact:a[7],fn:a[8],hint:a[9]}));
+const STK=['🦄','🚀','🐢','🦖','🌈','🐬','🦁','🍎','🎈','🐼','🦋','🏆'];
+const QZ=[['Onde a comida começa a ser mastigada?',['Boca','Estômago','Fígado'],0],['Qual órgão transforma a comida em papinha?',['Esôfago','Estômago','Pâncreas'],1],['Onde os nutrientes passam para o sangue?',['Intestino delgado','Boca','Fígado'],0]];
+const $=s=>document.querySelector(s);
+let S={level:0,narr:true,stars:0,done:0,stk:[]};
+try{Object.assign(S,JSON.parse(localStorage.getItem('mch')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('mch',JSON.stringify(S))}catch(e){}};
+
+/* áudio: sons sintetizados + voz do navegador */
+let ac;function tone(seq){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();let t=ac.currentTime;seq.forEach(([f,d,v=.15])=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d);t+=d*.8})}catch(e){}}
+const sOk=()=>tone([[523,.12],[659,.12],[784,.25]]),sBad=()=>tone([[200,.25,.08]]),sStar=()=>tone([[523,.1],[659,.1],[784,.1],[1047,.4]]);
+function say(t,force){if(!force&&!S.narr)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='pt-BR';u.rate=.9;u.pitch=1.15;speechSynthesis.speak(u)}catch(e){}}
+
+/* desenho dos órgãos */
+function inner(o){const w=o.w,h=o.h,m=Math.min(w,h);
+ if(o.id=='delgado'){let d=`M6 ${h/2}`,dx=(w-12)/5;for(let i=0;i<5;i++)d+=` Q${6+i*dx+dx/2} ${i%2?h-1:1} ${6+(i+1)*dx} ${h/2}`;return`<path d="${d}" fill="none" stroke="${o.c}" stroke-width="${h*.32}" stroke-linecap="round"/>`}
+ if(o.id=='grosso')return`<path d="M8 ${h-6}V10H${w-8}V${h-6}" fill="none" stroke="${o.c}" stroke-width="${h*.2}" stroke-linecap="round" stroke-linejoin="round"/>`;
+ let s=`<rect width="${w}" height="${h}" rx="${m*.45}" fill="${o.c}" stroke="#0003" stroke-width="1.5"/>`;
+ if(o.id=='boca')s+=`<path d="M${w*.12} ${h/2}H${w*.88}" stroke="#fff" stroke-width="2" stroke-linecap="round"/>`;
+ else if(m>=20)s+=`<circle cx="${w*.35}" cy="${h*.4}" r="${m*.08}" fill="#222"/><circle cx="${w*.65}" cy="${h*.4}" r="${m*.08}" fill="#222"/><path d="M${w*.38} ${h*.58}Q${w*.5} ${h*.58+m*.18} ${w*.62} ${h*.58}" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round"/>`;
+ return s}
+const osvg=(o,k,extra='')=>`<svg viewBox="0 0 ${o.w} ${o.h}" width="${o.w*k}" height="${o.h*k}" ${extra}>${inner(o)}</svg>`;
+
+function bodyBase(){return`<g fill="var(--skin)" stroke="var(--line)" stroke-width="2.5">
+<rect x="37" y="120" width="43" height="160" rx="18"/><rect x="230" y="120" width="43" height="160" rx="18"/>
+<rect x="96" y="320" width="53" height="165" rx="18"/><rect x="161" y="320" width="53" height="165" rx="18"/>
+<rect x="140" y="90" width="31" height="30" rx="8"/><ellipse cx="155" cy="60" rx="43" ry="50"/>
+<circle cx="139" cy="42" r="4" fill="#222" stroke="none"/><circle cx="171" cy="42" r="4" fill="#222" stroke="none"/></g>
+<rect x="84" y="110" width="142" height="225" rx="30" fill="var(--skin)" fill-opacity=".32" stroke="var(--line)" stroke-width="2.5"/>`}
+
+/* navegação */
+function go(v){document.querySelectorAll('.view').forEach(e=>e.hidden=e.id!=v);if(v=='home')home()}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){speechSynthesis&&speechSynthesis.cancel();go(g.dataset.go)}});
+
+/* home */
+const LV=['4–6 anos','7–8 anos','9–10 anos'];
+function home(){
+ $('#hmsg').textContent='Oi! Vamos montar o corpo humano?';
+ $('#lv').innerHTML=LV.map((t,i)=>`<button class="pill ${S.level==i?'on':''}" data-l="${i}">${t}</button>`).join('');
+ $('#tn').textContent=S.narr?'🔊 Narração: sim':'🔇 Narração: não';
+ $('#stat').textContent=`⭐ ${S.stars} estrelas · 🏅 ${S.done} corpos montados`;
+ $('#album').innerHTML=STK.map(s=>`<div class="stk">${S.stk.includes(s)?s:'❓'}</div>`).join('')}
+$('#lv').onclick=e=>{const l=e.target.dataset.l;if(l!=null){S.level=+l;save();home()}};
+$('#tn').onclick=()=>{S.narr=!S.narr;save();home()};
+$('#td').onclick=()=>{const r=document.documentElement,d=getComputedStyle(r).colorScheme=='dark';r.dataset.theme=d?'light':'dark'};
+$('#play').onclick=()=>{startGame();go('game')};
+
+/* jogo */
+let placed,mistakes,xray,last,tray;
+function startGame(){placed=new Set();mistakes=0;xray=false;last=null;tray=[...O].sort(()=>Math.random()-.5);
+ say$('Arraste cada órgão para o lugar certo!');render()}
+function say$(t){$('#msg').textContent=t}
+function renderBody(el,onTap){
+ const ghost=S.level<2||xray;
+ el.innerHTML=bodyBase()+O.map(o=>{const d=placed.has(o.id);
+  if(d)return`<svg x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" viewBox="0 0 ${o.w} ${o.h}" ${onTap?`style="cursor:pointer" data-o="${o.id}"`:''}><g ${last==o.id?'class="pop"':''}>${inner(o)}</g></svg>`;
+  if(!ghost)return'';
+  return`<rect x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" rx="10" fill="${o.c}" fill-opacity=".25" stroke="${o.c}" stroke-width="1.5" stroke-dasharray="4 3"/>`+(S.level==0&&o.w>30?`<text x="${o.x+o.w/2}" y="${o.y+o.h/2+3}" font-size="9" font-weight="800" text-anchor="middle" fill="var(--ink)">${o.name}</text>`:'')}).join('')}
+function render(){
+ renderBody($('#body'));
+ const rest=tray.filter(o=>!placed.has(o.id));
+ $('#tray').innerHTML=rest.length?rest.map(o=>`<div class="it" data-id="${o.id}">${osvg(o,Math.min(.9,70/Math.max(o.w,o.h)*1.0))}<span>${o.name}</span></div>`).join(''):'<b style="margin:auto;font-size:22px">Corpo completo! 🎉</b>';
+ $('#pb').style.width=placed.size/O.length*100+'%';$('#pc').textContent=`${placed.size}/${O.length} ⭐`}
+$('#xr').onclick=()=>{xray=!xray;$('#xr').classList.toggle('on',xray);renderBody($('#body'))};
+
+/* arrastar e soltar (mouse e toque) */
+let drag=null;
+$('#tray').addEventListener('pointerdown',e=>{const it=e.target.closest('.it');if(!it)return;e.preventDefault();
+ const o=O.find(x=>x.id==it.dataset.id);const g=document.createElement('div');g.className='drag';g.innerHTML=osvg(o,Math.min(1.3,95/Math.max(o.w,o.h)));
+ document.body.appendChild(g);it.classList.add('gone');drag={o,g,it};mv(e)});
+function mv(e){if(drag){drag.g.style.left=e.clientX+'px';drag.g.style.top=e.clientY+'px'}}
+addEventListener('pointermove',mv);
+addEventListener('pointerup',e=>{if(!drag)return;const{o,g,it}=drag;drag=null;g.remove();it.classList.remove('gone');
+ const sv=$('#body'),p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(sv.getScreenCTM().inverse()),pad=14;
+ const hit=q.x>o.x-pad&&q.x<o.x+o.w+pad&&q.y>o.y-pad&&q.y<o.y+o.h+pad;
+ if(hit)right(o,e);else wrong(o)});
+addEventListener('pointercancel',()=>{if(drag){drag.g.remove();drag.it.classList.remove('gone');drag=null}});
+function right(o,e){placed.add(o.id);last=o.id;sOk();say$(`${o.name}: ${o.fact}`);say(o.fact);render();
+ const b=document.createElement('div');b.className='burst';b.textContent='🌟';b.style.left=e.clientX+'px';b.style.top=e.clientY+'px';document.body.appendChild(b);setTimeout(()=>b.remove(),900);
+ if(placed.size==O.length)finish()}
+function wrong(o){mistakes++;sBad();say$('Ops! Tente de novo. '+o.hint);say(o.hint);const s=$('#body');s.classList.remove('shake');void s.getBoundingClientRect();s.classList.add('shake')}
+function finish(){const st=mistakes<=2?3:mistakes<=5?2:1,stk=STK[S.done%STK.length];
+ S.stars+=st;S.done++;if(!S.stk.includes(stk))S.stk.push(stk);save();setTimeout(sStar,500);
+ setTimeout(()=>{$('#cn').textContent='Craque';$('#cs').textContent='⭐'.repeat(st)+'☆'.repeat(3-st);$('#csk').textContent='Novo adesivo: '+stk;go('done')},2200)}
+
+/* explorar */
+let sel=null;
+function pick(id){sel=O.find(o=>o.id==id);$('#info').innerHTML=`<div style="font-size:22px;font-weight:900">${sel.name}</div>${sel.fn}`;$('#spk').hidden=false;say(sel.name+'. '+sel.fn,true);
+ $('#chips').querySelectorAll('.pill').forEach(c=>c.classList.toggle('on',c.dataset.id==id))}
+$('#goex').onclick=()=>{go('explore');placed=new Set(O.map(o=>o.id));last=null;renderBody($('#xbody'),true);
+ $('#chips').innerHTML=O.map(o=>`<button class="pill" data-id="${o.id}">${o.name}</button>`).join('')};
+$('#xbody').addEventListener('click',e=>{const s=e.target.closest('[data-o]');if(s)pick(s.dataset.o)});
+$('#chips').onclick=e=>{if(e.target.dataset.id)pick(e.target.dataset.id)};
+$('#spk').onclick=()=>say(sel.name+'. '+sel.fn,true);
+
+/* quiz */
+let qi,qs;
+$('#goq').onclick=()=>{qi=0;qs=0;go('quiz');ask()};
+function ask(){if(qi>=QZ.length){$('#qt').textContent=`Você acertou ${qs} de ${QZ.length}! ${qs==QZ.length?'🏆':'👏'}`;$('#qo').innerHTML='<button data-go="done">Voltar</button>';sStar();return}
+ const q=QZ[qi];$('#qt').textContent=q[0];say(q[0]);$('#qo').innerHTML=q[1].map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}
+$('#qo').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;const q=QZ[qi],b=[...$('#qo').children];
+ b.forEach((x,k)=>{x.style.background=k==q[2]?'var(--ok)':(k==+i?'var(--bad)':'#888');x.style.color='#fff';x.dataset.i=''});
+ if(+i==q[2]){qs++;sOk()}else sBad();setTimeout(()=>{qi++;ask()},1000)};
+
+home();
+</script>
+</body>
+</html>
