@@ -70,7 +70,6 @@ h1{font-size:clamp(26px,6vw,38px);margin:6px 0;text-align:center;color:var(--pri
       <div id="stat" style="font-weight:800"></div>
       <div class="grid" id="album"></div>
     </div>
-    <div class="row" style="margin:12px 0;opacity:.6;font-weight:700">🦴 Esqueleto · ❤️ Coração · 🫁 Pulmões — em breve 🔒</div>
   </div>
 </section>
 
@@ -160,7 +159,7 @@ function go(v){document.querySelectorAll('.view').forEach(e=>e.hidden=e.id!=v);i
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){speechSynthesis&&speechSynthesis.cancel();go(g.dataset.go)}});
 
 /* home */
-const LV=['4–6 anos','7–8 anos','9–10 anos'];
+const LV=['4–6 anos','7–8 anos','9–12 anos'];
 function home(){
  $('#hmsg').textContent='Oi! Vamos montar o corpo humano?';
  $('#lv').innerHTML=LV.map((t,i)=>`<button class="pill ${S.level==i?'on':''}" data-l="${i}">${t}</button>`).join('');
